@@ -1,15 +1,15 @@
 #include<stdio.h>
 #include<string.h>
-int accounts_num;
-int actuelle =0;
+
+int actuelle =0;    //nbr des comptes
+
 typedef struct {
     char name [100];
     char lastname [100];
     char ID[10];
-    float balance,deposit[100],withdrawal[100];
-    int countOfDeposit  ;
-    int countOfWithdrawal;
+    float balance;
 }ld;
+
 ld arrUsers[50];
 
 //////////////////////////////////////////////////////////////////
@@ -23,6 +23,7 @@ void menu(){
     printf("\t6 - (TRI ASCENDANT). \n"); //BANK ACCOUNTS WITH A HIGHER AMOUNT.
     printf("\t7 - (TRI DESCENDANT). \n"); //BANK ACCOUNTS WITH A LOWER AMOUNT.
     printf("\t8 - client list. \n");
+    printf("\t9 - Exit. \n");
 }
 
 //////////////////////////////////////////////////////////////////
@@ -39,32 +40,31 @@ void user(){
 }
 
 //////////////////////////////////////////////////////////////////
-int multi_user(){
+void multi_user(){
     int i;
+    int accounts_num;
     printf("how many accounts do you want to create: ");
     scanf("%d",&accounts_num);
     for(i=0; i<accounts_num; i++){
         user();
     }
-    return accounts_num;
 }
 
 //////////////////////////////////////////////////////////////////
 int searchForUser(char ID[50]){
-    int i,cmp=0;
+    int i;
     if(actuelle > 0)
         for(i=0 ; i < actuelle ; i++){
             if(strcmp(arrUsers[i].ID,ID)  == 0){
-                cmp++;
                 return i;
             }
         }
     else{
         return -1;
     }
-    if(cmp == 0){
+
         return -1;
-    }
+
 }
 
 //////////////////////////////////////////////////////////////////
@@ -75,6 +75,21 @@ void showCompt(int position){
     printf("*\t\t\t\t\t ID (CIN) : %s \n",arrUsers[position].ID);
     printf("*\t\t\t\t\t Balance : %.2f \n",arrUsers[position].balance);
     printf("***********************************************\n");
+}
+
+//////////////////////////////////////////////////////////////////
+void AllUsers(){
+    for (int i = 0; i <= actuelle ; i++) {
+
+        printf("***********************************************\n");
+        printf("*\t\t\t\t\t Name : %s \n",arrUsers[i].name);
+        printf("*\t\t\t\t\t Last Name : %s \n",arrUsers[i].lastname);
+        printf("*\t\t\t\t\t ID (CIN) : %s \n",arrUsers[i].ID);
+        printf("*\t\t\t\t\t Balance : %.2f \n",arrUsers[i].balance);
+        printf("***********************************************\n");
+
+    }
+
 }
 
 //////////////////////////////////////////////////////////////////
@@ -96,8 +111,6 @@ void deposit(){
         printf("You made a deposit of %.2f\n", dep);
 
         arrUsers[position].balance += dep;
-        arrUsers[position].countOfDeposit++;
-        arrUsers[position].deposit[arrUsers[position].countOfDeposit] = dep;
 
         showCompt(position);
 
@@ -122,8 +135,6 @@ void withdrawal(){
             printf(" The operation is completed successfully.\n ");
             printf(" You made a withdrawal of  %d.\n", retrait);
 
-            arrUsers[position].countOfWithdrawal++;
-            arrUsers[position].withdrawal[arrUsers[position].countOfWithdrawal] = retrait;
             showCompt(position);
         }else
             printf("Sorry you can t make a withdrawal because you don't have this balance .");
@@ -185,26 +196,29 @@ void getBalnce(){
 
 
 }
-int main(){
+int main() {
 
-    int choice ;
-    int actuelle =0, accounts_num;
+    int choice;
+    int actuelle = 0, accounts_num;
     do {
         menu();
         printf(" Enter your choice. ");
         scanf("%d", &choice);
         switch (choice) {
-            case 1 : user (actuelle);
+            case 1 :
+                user(actuelle);
                 actuelle++;
                 break;
             case 2 :
                 printf("Enter YOUR CHOICE ");
-                accounts_num = multi_user(actuelle);
+                multi_user(actuelle);
                 actuelle += accounts_num;
                 break;
-            case 3 : deposit();
+            case 3 :
+                deposit();
                 break;
-            case 4 : withdrawal();
+            case 4 :
+                withdrawal();
                 break;
             case 5:
                 getBalnce();
@@ -215,8 +229,17 @@ int main(){
             case 7:
                 TRI_Descendant();
                 break;
-          //  case 8:
-             //   client list ()
+            case 8:
+                AllUsers();
+                break;
+            case 9:
+                printf(" GOOD BYE! ");
+                break;
+            default:
+                printf(" Sorry you cant access ");
+
         }
-    }while (choice!=9);
+    } while (choice != 9);
+
+    return 0;
 }

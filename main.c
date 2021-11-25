@@ -1,7 +1,8 @@
 #include<stdio.h>
 #include<string.h>
 
-int actuelle =0;    //nbr des comptes
+int actual =0;    //account
+float percentage = 0;
 
 typedef struct {
     char name [100];
@@ -18,25 +19,26 @@ void menu(){
     printf("\t1 - CREATE AN ACCOUNT. \n ");
     printf("\t2 - CREATE SEVERAL ACCOUNT. \n ");
     printf("\t3 - WOULD YOU LIKE TO DEPOSIT? \n");
-    printf("\t4 - WOULD YOU LIKE TO WITHDRAWAL? \n");
+    printf("\t4 - WOULD YOU LIKE TO WITHDRAW? \n");
     printf("\t5 - CHECK YOUR BALANCE. \n");
     printf("\t6 - (TRI ASCENDANT). \n"); //BANK ACCOUNTS WITH A HIGHER AMOUNT.
     printf("\t7 - (TRI DESCENDANT). \n"); //BANK ACCOUNTS WITH A LOWER AMOUNT.
     printf("\t8 - client list. \n");
-    printf("\t9 - Exit. \n");
+    printf("\t9 - customer loyalty. \n");
+    printf("\t0 - Exit. \n");
 }
 
 //////////////////////////////////////////////////////////////////
 void user(){
     printf(" Enter your name please : ");
-    scanf("%s", arrUsers[actuelle].name);
+    scanf("%s",arrUsers[actual].name);
     printf(" Enter your lastname : ");
-    scanf("%s",  arrUsers[actuelle].lastname);
+    scanf("%s",arrUsers[actual].lastname);
     printf(" Enter your ID : ");
-    scanf("%s",  arrUsers[actuelle].ID);
+    scanf("%s",arrUsers[actual].ID);
     printf(" Enter your Balance: ");
-    scanf("%f", & arrUsers[actuelle].balance);
-    actuelle++;
+    scanf("%f",&arrUsers[actual].balance);
+    actual++;
 }
 
 //////////////////////////////////////////////////////////////////
@@ -53,9 +55,10 @@ void multi_user(){
 //////////////////////////////////////////////////////////////////
 int searchForUser(char ID[50]){
     int i;
-    if(actuelle > 0)
-        for(i=0 ; i < actuelle ; i++){
+    if(actual > 0)
+        for(i=0 ; i < actual ; i++){
             if(strcmp(arrUsers[i].ID,ID)  == 0){
+
                 return i;
             }
         }
@@ -64,11 +67,9 @@ int searchForUser(char ID[50]){
     }
 
         return -1;
-
 }
-
 //////////////////////////////////////////////////////////////////
-void showCompt(int position){
+void showAccount(int position){
     printf("***********************************************\n");
     printf("*\t\t\t\t\t Name : %s \n",arrUsers[position].name);
     printf("*\t\t\t\t\t Last Name : %s \n",arrUsers[position].lastname);
@@ -76,22 +77,19 @@ void showCompt(int position){
     printf("*\t\t\t\t\t Balance : %.2f \n",arrUsers[position].balance);
     printf("***********************************************\n");
 }
-
 //////////////////////////////////////////////////////////////////
 void AllUsers(){
-    for (int i = 0; i <= actuelle ; i++) {
+    for (int i = 0; i < actual ; i++) {
 
-        printf("***********************************************\n");
+        printf("*************************************************************************\n");
         printf("*\t\t\t\t\t Name : %s \n",arrUsers[i].name);
         printf("*\t\t\t\t\t Last Name : %s \n",arrUsers[i].lastname);
         printf("*\t\t\t\t\t ID (CIN) : %s \n",arrUsers[i].ID);
         printf("*\t\t\t\t\t Balance : %.2f \n",arrUsers[i].balance);
-        printf("***********************************************\n");
+        printf("**************************************************************************\n");
 
     }
-
 }
-
 //////////////////////////////////////////////////////////////////
 void deposit(){
     char searchID[10];
@@ -99,20 +97,22 @@ void deposit(){
     float dep;
     printf(" Enter your ID. ");
     scanf("%s", searchID);
+
     position = searchForUser(searchID);
 
     if(position != -1){
         printf("\tWELCOME\n");
-        showCompt(position);
+        showAccount(position);
         printf(" How much you want to deposit?\n");
         scanf("%f",&dep);
 
         printf("The operation is completed successfully.\n ");
-        printf("You made a deposit of %.2f\n", dep);
+        printf("You made a deposit of %.2f\n",dep);
 
         arrUsers[position].balance += dep;
 
-        showCompt(position);
+
+        showAccount(position);
 
     }
 }
@@ -120,7 +120,7 @@ void deposit(){
 void withdrawal(){
     char searchID[10];
     int position ;
-    float retrait;
+    float withdraw;
     printf(" Enter your ID. ");
     scanf("%s", searchID);
 
@@ -128,63 +128,61 @@ void withdrawal(){
 
 
     if(position != -1){
-        printf(" How much you want to withdrawal?");
-        scanf("%f",&retrait);
-        if(arrUsers[position].balance >= retrait){
-            arrUsers[position].balance -= retrait;
+        printf(" How much you want to withdraw ? ");
+        scanf("%f",&withdraw);
+        if(arrUsers[position].balance >= withdraw){
+            arrUsers[position].balance -= withdraw;
             printf(" The operation is completed successfully.\n ");
-            printf(" You made a withdrawal of  %d.\n", retrait);
+            printf(" You made a withdrawal of  %.2f.\n", withdraw);
 
-            showCompt(position);
+            showAccount(position);
         }else
             printf("Sorry you can t make a withdrawal because you don't have this balance .");
     }
     else
         printf("Sorry we don't find this account.");
 }
-/////////////////////////////////////////////////////
-void TRI_Ascendant (){
-
-    int   i,j;
-    ld compt[50];
-
-    for(i = 0; i < actuelle -1 ; i++){
-        for( j = i+1 ; j < actuelle ; j++ )
-            if(arrUsers[i].balance < arrUsers[j].balance){
-                compt[0] = arrUsers[i];
-                arrUsers[i] = arrUsers[j];
-                arrUsers[j] = compt[0];
-
-            }
-    }
-    for ( i=0 ; i < actuelle ; i++)
-    {
-        printf("%.2f \n",arrUsers[i].balance);
-    }
-}
 /////////////////////////////////////////////////////////////////
-
-void  TRI_Descendant(){
+void  tri_Ascendant(){
     int   i,j;
-    ld compt[50];
+    ld account[50];
 
-    for(i = 0; i < actuelle -1 ; i++){
-        for( j = i+1 ; j < actuelle ; j++ )
+    for(i = 0; i < actual -1 ; i++){
+        for( j = i+1 ; j < actual ; j++ )
             if(arrUsers[i].balance > arrUsers[j].balance){
-                compt[0] = arrUsers[i];
+                account[0] = arrUsers[i];
                 arrUsers[i] = arrUsers[j];
-                arrUsers[j] = compt[0];
+                arrUsers[j] = account[0];
 
             }
     }
-    for ( i=0 ; i < actuelle ; i++)
+    for ( i=0 ; i < actual ; i++)
     {
-        printf("%.2f \n",arrUsers[i].balance);
+        printf("%s  |   %s |   %s  |  %.2f\n",arrUsers[i].name,arrUsers[i].lastname,arrUsers[i].ID,arrUsers[i].balance);
     }
 }
 /////////////////////////////////////////////////////////////////
+void tri_Descendant (){
 
-void getBalnce(){
+    int   i,j;
+    ld account[50];
+
+    for(i = 0; i < actual -1 ; i++){
+        for( j = i+1 ; j < actual ; j++ )
+            if(arrUsers[i].balance < arrUsers[j].balance){
+                account[0] = arrUsers[i];
+                arrUsers[i] = arrUsers[j];
+                arrUsers[j] = account[0];
+
+            }
+    }
+    for ( i=0 ; i < actual ; i++)
+    {
+        printf("%s  |   %s |   %s  |  %.2f\n",arrUsers[i].name,arrUsers[i].lastname,arrUsers[i].ID,arrUsers[i].balance);
+    }
+}
+/////////////////////////////////////////////////////////////////
+void getBalance(){
     char ID[50];
     int position;
     printf("Enter ID : ");
@@ -193,26 +191,25 @@ void getBalnce(){
     if(position != -1){
         printf("Your Balance is : %.2f \n",arrUsers[position].balance);
     }
-
-
 }
+/////////////////////////////////////////////////////////////////
+
 int main() {
 
     int choice;
-    int actuelle = 0, accounts_num;
+    int actual = 0, accounts_num;
     do {
         menu();
         printf(" Enter your choice. ");
         scanf("%d", &choice);
         switch (choice) {
             case 1 :
-                user(actuelle);
-                actuelle++;
+                user(actual);
+                actual++;
                 break;
             case 2 :
-                printf("Enter YOUR CHOICE ");
-                multi_user(actuelle);
-                actuelle += accounts_num;
+                multi_user(actual);
+                actual += accounts_num;
                 break;
             case 3 :
                 deposit();
@@ -221,25 +218,35 @@ int main() {
                 withdrawal();
                 break;
             case 5:
-                getBalnce();
+                getBalance();
                 break;
             case 6:
-                TRI_Ascendant();
+                 tri_Ascendant();
                 break;
             case 7:
-                TRI_Descendant();
+                tri_Descendant();
                 break;
             case 8:
                 AllUsers();
                 break;
             case 9:
+                tri_Descendant();
+                for(int i=0;i<3;i++){
+                    percentage=0;
+                    percentage=(arrUsers[i].balance*1.3)/100;
+                    arrUsers[i].balance=  arrUsers[i].balance+percentage;
+                    printf("\n\n\n\n");
+                    printf("%s\t,%s\t,%s\t,%.2f\n",arrUsers[i].name,arrUsers[i].lastname,arrUsers[i].ID, arrUsers[i].balance);
+                }
+                break;
+            case 0:
                 printf(" GOOD BYE! ");
                 break;
             default:
-                printf(" Sorry you cant access ");
+                printf(" Sorry you can t access ");
 
         }
-    } while (choice != 9);
+    } while (choice != 0);
 
     return 0;
 }
